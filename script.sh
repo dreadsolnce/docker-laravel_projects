@@ -49,9 +49,9 @@ case "$project" in
 	"L" | "l" )
 	echo "Выбран проект laravel"
 
-  sed -i 's/^APP_NAME=.*/APP_NAME=laravel/1' .env
-  
-  mkdir -p ${DIR_LARAVEL}
+	sed -i 's/^APP_NAME=.*/APP_NAME=laravel/1' .env
+
+	mkdir -p ${DIR_LARAVEL}
 	composer create-project --prefer-dist laravel/laravel ${DIR_LARAVEL}
 
 	docker compose up -d --build

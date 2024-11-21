@@ -1,0 +1,38 @@
+FROM php:8.2-fpm
+
+WORKDIR "/var/www"
+
+# Fix debconf warnings upon build
+ARG DEBIAN_FRONTEND=noninteractive
+
+#Download and Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install selected packages
+RUN apt-get update
+RUN apt-get -y --no-install-recommends install libzip-dev libxml2-dev libxslt-dev libpq-dev zip vim git supervisor
+
+# Install selected extensions
+RUN docker-php-ext-install zip xml xsl soap pdo_pgsql pgsql bcmath intl opcache sockets
+RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+
+# Создаём пользователя и группу www для приложения
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN chown -R www:www /var/www
+
+# Run composer
+RUN /bin/sh -c composer install --no-dev
+
+# copy current folder to /var/www
+#COPY . /var/www
+#COPY --chown=www:www . /var/www
+
+#Change user to www
+USER www
+
+EXPOSE 9000
+
+COPY ./supervisor.conf /etc/supervisor/conf.d/supervisord.conf
+
+# CMD ["php-fpm"]

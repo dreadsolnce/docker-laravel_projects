@@ -23,6 +23,7 @@ services:
         net:
           ipv4_address: 172.28.1.4
       command: supervisord -c /etc/supervisor/conf.d/supervisord.conf
+      restart: unless-stopped
 
     webserver:
       image: nginx:alpine
@@ -37,6 +38,7 @@ services:
       networks:
         net:
           ipv4_address: 172.28.1.3
+      restart: unless-stopped
 
     postgres:
       image: postgres:9.5-alpine
@@ -70,6 +72,7 @@ services:
       networks:
         net:
           ipv4_address: 172.28.1.5
+      restart: unless-stopped
 
     rabbitmq:
       image: rabbitmq:3-management-alpine
@@ -88,6 +91,7 @@ services:
       networks:
         net:
           ipv4_address: 172.28.1.6
+      restart: unless-stopped
 
 networks:
     net:

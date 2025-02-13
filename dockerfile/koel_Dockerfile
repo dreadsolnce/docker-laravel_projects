@@ -8,6 +8,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 #Download and Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+COPY ./debian.sources /etc/apt/sources.list.d/debian.sources
+
 # Install selected packages
 RUN apt-get update
 RUN apt-get -y --no-install-recommends install libzip-dev libxml2-dev libxslt-dev libpq-dev \
